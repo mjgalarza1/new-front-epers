@@ -1,34 +1,33 @@
-import React from "react";
-import './PersonajeAhorcado.css'; // Archivo CSS para el diseño de la grilla
+import hangman07 from '../assets/images/ahorcado/hangman07.png';
+import hangman06 from '../assets/images/ahorcado/hangman06.png';
+import hangman05 from '../assets/images/ahorcado/hangman05.png';
+import hangman04 from '../assets/images/ahorcado/hangman04.png';
+import hangman03 from '../assets/images/ahorcado/hangman03.png';
+import hangman02 from '../assets/images/ahorcado/hangman02.png';
+import hangman01 from '../assets/images/ahorcado/hangman01.png';
+import React from 'react';
 
 const PersonajeAhorcado: React.FC<{ attemptsLeft: number }> = ({ attemptsLeft }) => {
-    // Rutas de las imágenes
-    const parts = [
-        { id: 'head', src: 'public/vite.svg', alt: 'Cabeza', gridArea: '1 / 2' },
-        { id: 'torso', src: 'public/vite.svg', alt: 'Torso', gridArea: '2 / 2' },
-        { id: 'left-arm', src: 'public/vite.svg', alt: 'Brazo izquierdo', gridArea: '2 / 1' },
-        { id: 'right-arm', src: 'public/vite.svg', alt: 'Brazo derecho', gridArea: '2 / 3' },
-        { id: 'left-leg', src: 'public/vite.svg', alt: 'Pierna izquierda', gridArea: '3 / 1' },
-        { id: 'right-leg', src: 'public/vite.svg', alt: 'Pierna derecha', gridArea: '3 / 3' },
+    const images = [
+        hangman01, // 0 intentos restantes (completo)
+        hangman02, // 1 intento restante
+        hangman03, // 2 intentos restantes
+        hangman04, // 3 intentos restantes
+        hangman05, // 4 intentos restantes
+        hangman06, // 5 intentos restantes
+        hangman07, // 6 intentos restantes (vacío o inicial)
     ];
 
-    // Determinar qué partes mostrar según los intentos restantes
-    const visibleParts = parts.slice(0, 6 - attemptsLeft);
+    const currentImage = images[6 - attemptsLeft];
 
     return (
-        <div>
+        <div style={{ textAlign: 'center' }}>
             <h2 style={{ fontSize: '3vw' }}>Intentos restantes: {attemptsLeft}</h2>
-            <div className="character-grid">
-                {visibleParts.map((part) => (
-                    <img
-                        key={part.id}
-                        src={part.src}
-                        alt={part.alt}
-                        style={{ gridArea: part.gridArea }}
-                        className="body-part"
-                    />
-                ))}
-            </div>
+            <img
+                src={currentImage}
+                alt={`Intentos restantes: ${attemptsLeft}`}
+                style={{ width: '60%', height: 'auto', maxWidth: '300px', margin: '20px auto' }}
+            />
         </div>
     );
 };
