@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+    "target": "ES2015",
+        "lib": ["DOM", "ES2015"],
+        "module": "ESNext",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "jsx": "react",
+        "moduleResolution": "node",
+        "baseUrl": "./",
+        "paths": {
+            "react-router-dom": ["node_modules/react-router-dom"]
+        }
+    }
+}
