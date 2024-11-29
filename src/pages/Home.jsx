@@ -1,4 +1,5 @@
 import React from 'react';
+import fondoJuego from "../assets/images/fondoJuego.png";
 import { useNavigate } from 'react-router-dom';
 import {Parallax, ParallaxProvider} from 'react-scroll-parallax';
 
@@ -14,7 +15,7 @@ export default function HomeScreen() {
             <div style={styles.container}>
                 <Parallax y={[-20, 20]} tagOuter="figure">
                     <img
-                        src="src/assets/images/fondo-para-juego.png"
+                        src={fondoJuego}
                         alt="Fondo para Juego"
                         style={{width: '100%', height: 'auto'}}
                     />
