@@ -1,22 +1,31 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const ChooseNamePage: React.FC = () => {
     const [name, setName] = useState('');
+    const [errorMessage, setErrorMessage] = useState(''); // Para mostrar el mensaje de error
     const navigate = useNavigate();
 
     const handleSubmit = async () => {
         if (name.length > 15) {
-            alert("El nombre no puede superar los 15 caracteres.");
+            setErrorMessage("El nombre no puede superar los 15 caracteres.");
             return;
         }
 
         try {
+            // Verificar si el jugador con ese nombre ya existe
+            const checkResponse = await fetch(`http://localhost:8080/jugador/${name}`);
+            if (checkResponse.ok) {
+                // Si el jugador ya existe, mostrar mensaje de error
+                setErrorMessage('¡Este nombre ya está en uso! Por favor elige otro.');
+                return; // No proceder con la creación del juego
+            }
+
+            // Si no existe, proceder a crear el juego
             const response = await fetch('http://localhost:8080/juego', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: name,
+                body: name, // Enviar nombre en el body
             });
 
             if (!response.ok) throw new Error('Error al crear el juego');
@@ -29,7 +38,7 @@ const ChooseNamePage: React.FC = () => {
             navigate(`/game/${idJuego}/${nombre}`);
         } catch (error) {
             console.error(error);
-            alert('Hubo un error al crear el juego. Intenta nuevamente.');
+            setErrorMessage('Hubo un error al crear el juego. Intenta nuevamente.'); // Mostrar error
         }
     };
 
@@ -39,13 +48,21 @@ const ChooseNamePage: React.FC = () => {
             <input
                 type="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                    setName(e.target.value);
+                    setErrorMessage(''); // Limpiar mensaje de error cuando cambian el nombre
+                }}
                 maxLength={15}
                 style={{ padding: '10px', fontSize: '16px', margin: '20px 0' }}
             />
             <button onClick={handleSubmit} style={{ padding: '10px 20px', fontSize: '16px' }}>
                 Iniciar Juego
             </button>
+
+            {/* Mostrar mensaje de error si el nombre ya existe */}
+            {errorMessage && (
+                <p style={{ color: 'red', fontWeight: 'bold' }}>{errorMessage}</p>
+            )}
         </div>
     );
 };

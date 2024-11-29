@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Subscription } from 'rxjs';
 import { obtenerRanking } from '../scripts/rankingService';
 import {useNavigate} from "react-router-dom";
+import React from 'react';
 
 interface Jugador {
     nombre: string;

@@ -1,0 +1,25 @@
+.character-grid {
+    display: grid;
+    grid-template-rows: repeat(3, 60px); /* Reducir más el tamaño de las filas */
+    grid-template-columns: repeat(3, 60px); /* Reducir más el tamaño de las columnas */
+    justify-content: center;
+    align-items: center;
+    gap: 3px; /* Reducir más el espacio entre las imágenes */
+    margin: 10px auto;
+    width: max-content;
+}
+
+.body-part {
+    width: 40px; /* Disminuir aún más el tamaño de las imágenes */
+    height: auto; /* Mantener proporción */
+}
+
+@media (max-width: 768px) {
+    .body-part {
+        width: 50px;
+    }
+    .character-grid {
+        grid-template-rows: repeat(3, 60px);
+        grid-template-columns: repeat(3, 60px);
+    }
+}

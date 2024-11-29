@@ -3,8 +3,8 @@ import React from "react";
 const LetrasEquivocadas: React.FC<{ wrongLetters: string[] }> = ({ wrongLetters }) => {
     return (
         <div>
-            <h3>Letras incorrectas:</h3>
-            <p>{wrongLetters.join(', ')}</p> {/* Mostrar las letras equivocadas */}
+            <h3 style={{ fontSize: '4vw' }}>Letras incorrectas:</h3>
+            <p style={{ fontSize: '5vw' }}>{wrongLetters.join(', ')}</p>
         </div>
     );
 };

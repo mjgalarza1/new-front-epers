@@ -24,7 +24,7 @@ const GameOverPage: React.FC = () => {
     return (
         <div style={{ padding: '20px', textAlign: 'center' }}>
             <h1>Juego Terminado</h1>
-            {score !== null ? <p>Tu puntaje final: {score}</p> : <p>Cargando puntaje...</p>}
+            {score !== null ? <p>Felicidades {nombreJugador}! Tu puntaje final es: {score}</p> : <p>Cargando puntaje...</p>}
         </div>
     );
 };
