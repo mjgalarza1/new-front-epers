@@ -9,7 +9,7 @@ const GameOverPage: React.FC = () => {
     useEffect(() => {
         const fetchScore = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/jugador/${nombreJugador}/puntaje`);
+                const response = await fetch(`https://ouijpers-deploy-production.up.railway.app/jugador/${nombreJugador}/puntaje`);
                 if (!response.ok) throw new Error('Error al obtener el puntaje');
                 const data = await response.json();
                 setScore(data);

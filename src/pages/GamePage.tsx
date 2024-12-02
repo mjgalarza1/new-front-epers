@@ -34,7 +34,7 @@ const GamePage: React.FC = () => {
 
     const fetchAttemptsLeft = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/juego/${idJuego}/cantidadDeIntentos`);
+            const response = await fetch(`https://ouijpers-deploy-production.up.railway.app/juego/${idJuego}/cantidadDeIntentos`);
             if (!response.ok) throw new Error('Error al obtener intentos restantes');
             const data = await response.json();
             setAttemptsLeft(data);
@@ -46,7 +46,7 @@ const GamePage: React.FC = () => {
 
     const fetchRound = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/juego/${idJuego}/rondaActual`);
+            const response = await fetch(`https://ouijpers-deploy-production.up.railway.app/juego/${idJuego}/rondaActual`);
             if (!response.ok) throw new Error('Error al obtener la ronda actual');
             const data = await response.text();
 
@@ -67,7 +67,7 @@ const GamePage: React.FC = () => {
 
     const fetchWord = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/juego/${idJuego}/palabraAdivinando`);
+            const response = await fetch(`https://ouijpers-deploy-production.up.railway.app/juego/${idJuego}/palabraAdivinando`);
             if (!response.ok) throw new Error('Error al obtener la palabra');
             const data = await response.text();
             setWord(data);
@@ -79,7 +79,7 @@ const GamePage: React.FC = () => {
 
     const fetchWrongLetters = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/juego/${idJuego}/letrasEquivocadas`);
+            const response = await fetch(`https://ouijpers-deploy-production.up.railway.app/juego/${idJuego}/letrasEquivocadas`);
             if (!response.ok) throw new Error('Error al obtener letras equivocadas');
             const data = await response.text();
             setWrongLetters(data.split(','));
@@ -102,16 +102,16 @@ const GamePage: React.FC = () => {
     const handleLetterSubmit = async (letter: string) => {
         try {
             setIsSubmitting(true);
-            const response = await fetch(`http://localhost:8080/jugador/${nombreJugador}/adivinarLetra/${letter}`, {
+            const response = await fetch(`https://ouijpers-deploy-production.up.railway.app/jugador/${nombreJugador}/adivinarLetra/${letter}`, {
                 method: 'PUT',
             });
             if (!response.ok) throw new Error('Error al enviar la letra');
 
-            const attemptsResponse = await fetch(`http://localhost:8080/juego/${idJuego}/cantidadDeIntentos`);
+            const attemptsResponse = await fetch(`https://ouijpers-deploy-production.up.railway.app/juego/${idJuego}/cantidadDeIntentos`);
             if (!attemptsResponse.ok) throw new Error('Error al obtener intentos restantes');
             const attemptsLeftFromServer = await attemptsResponse.json();
 
-            const palabraActual = await fetch(`http://localhost:8080/juego/${idJuego}/palabraAdivinando`);
+            const palabraActual = await fetch(`https://ouijpers-deploy-production.up.railway.app/juego/${idJuego}/palabraAdivinando`);
             if (!palabraActual.ok) throw new Error('Error al obtener la palabra');
             const palabraActualDelServer = await palabraActual.text();
 
