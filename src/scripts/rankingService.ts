@@ -5,7 +5,7 @@ interface Jugador {
     puntaje: number;
 }
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = 'https://ouijpers-deploy-production.up.railway.app';
 
 export const obtenerRanking = (): Observable<Jugador> => {
     return new Observable<Jugador>((subscriber) => {
