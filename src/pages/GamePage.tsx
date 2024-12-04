@@ -1,10 +1,11 @@
+import React from 'react';
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PersonajeAhorcado from '../components/PersonajeAhorcado';
 import PalabraAdivinando from '../components/PalabraAdivinando';
 import LetrasEquivocadas from '../components/LetrasEquivocadas';
 import OuijPers from '../components/OuijPers';
-import React from 'react';
+import {API_BASE_URL} from "../util/util";
 
 const GamePage: React.FC = () => {
     const { idJuego, nombre } = useParams();
@@ -34,7 +35,7 @@ const GamePage: React.FC = () => {
 
     const fetchAttemptsLeft = async () => {
         try {
-            const response = await fetch(`https://ouijpers-deploy-production.up.railway.app/juego/${idJuego}/cantidadDeIntentos`);
+            const response = await fetch(`${API_BASE_URL}/juego/${idJuego}/cantidadDeIntentos`);
             if (!response.ok) throw new Error('Error al obtener intentos restantes');
             const data = await response.json();
             setAttemptsLeft(data);
@@ -46,7 +47,7 @@ const GamePage: React.FC = () => {
 
     const fetchRound = async () => {
         try {
-            const response = await fetch(`https://ouijpers-deploy-production.up.railway.app/juego/${idJuego}/rondaActual`);
+            const response = await fetch(`${API_BASE_URL}/juego/${idJuego}/rondaActual`);
             if (!response.ok) throw new Error('Error al obtener la ronda actual');
             const data = await response.text();
 
@@ -67,7 +68,7 @@ const GamePage: React.FC = () => {
 
     const fetchWord = async () => {
         try {
-            const response = await fetch(`https://ouijpers-deploy-production.up.railway.app/juego/${idJuego}/palabraAdivinando`);
+            const response = await fetch(`${API_BASE_URL}/juego/${idJuego}/palabraAdivinando`);
             if (!response.ok) throw new Error('Error al obtener la palabra');
             const data = await response.text();
             setWord(data);
@@ -79,7 +80,7 @@ const GamePage: React.FC = () => {
 
     const fetchWrongLetters = async () => {
         try {
-            const response = await fetch(`https://ouijpers-deploy-production.up.railway.app/juego/${idJuego}/letrasEquivocadas`);
+            const response = await fetch(`${API_BASE_URL}/juego/${idJuego}/letrasEquivocadas`);
             if (!response.ok) throw new Error('Error al obtener letras equivocadas');
             const data = await response.text();
             setWrongLetters(data.split(','));
@@ -102,16 +103,16 @@ const GamePage: React.FC = () => {
     const handleLetterSubmit = async (letter: string) => {
         try {
             setIsSubmitting(true);
-            const response = await fetch(`https://ouijpers-deploy-production.up.railway.app/jugador/${nombreJugador}/adivinarLetra/${letter}`, {
+            const response = await fetch(`${API_BASE_URL}/jugador/${nombreJugador}/adivinarLetra/${letter}`, {
                 method: 'PUT',
             });
             if (!response.ok) throw new Error('Error al enviar la letra');
 
-            const attemptsResponse = await fetch(`https://ouijpers-deploy-production.up.railway.app/juego/${idJuego}/cantidadDeIntentos`);
+            const attemptsResponse = await fetch(`${API_BASE_URL}/juego/${idJuego}/cantidadDeIntentos`);
             if (!attemptsResponse.ok) throw new Error('Error al obtener intentos restantes');
             const attemptsLeftFromServer = await attemptsResponse.json();
 
-            const palabraActual = await fetch(`https://ouijpers-deploy-production.up.railway.app/juego/${idJuego}/palabraAdivinando`);
+            const palabraActual = await fetch(`${API_BASE_URL}/juego/${idJuego}/palabraAdivinando`);
             if (!palabraActual.ok) throw new Error('Error al obtener la palabra');
             const palabraActualDelServer = await palabraActual.text();
 

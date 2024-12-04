@@ -1,11 +1,10 @@
 import { Observable } from 'rxjs';
+import {API_BASE_URL} from "../util/util";
 
 interface Jugador {
     nombre: string;
     puntaje: number;
 }
-
-const API_BASE_URL = 'https://ouijpers-deploy-production.up.railway.app';
 
 export const obtenerRanking = (): Observable<Jugador> => {
     return new Observable<Jugador>((subscriber) => {

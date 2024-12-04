@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import {API_BASE_URL} from "../util/util";
 
 const GameOverPage: React.FC = () => {
     const location = useLocation();
@@ -9,7 +10,7 @@ const GameOverPage: React.FC = () => {
     useEffect(() => {
         const fetchScore = async () => {
             try {
-                const response = await fetch(`https://ouijpers-deploy-production.up.railway.app/jugador/${nombreJugador}/puntaje`);
+                const response = await fetch(`${API_BASE_URL}/jugador/${nombreJugador}/puntaje`);
                 if (!response.ok) throw new Error('Error al obtener el puntaje');
                 const data = await response.json();
                 setScore(data);

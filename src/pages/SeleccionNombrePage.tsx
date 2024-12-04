@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {API_BASE_URL} from "../util/util";
 
 const ChooseNamePage: React.FC = () => {
     const [name, setName] = useState('');
@@ -14,7 +15,7 @@ const ChooseNamePage: React.FC = () => {
 
         try {
             // Verificar si el jugador con ese nombre ya existe
-            const checkResponse = await fetch(`https://ouijpers-deploy-production.up.railway.app/jugador/${name}`);
+            const checkResponse = await fetch(`${API_BASE_URL}/jugador/${name}`);
             if (checkResponse.ok) {
                 // Si el jugador ya existe, mostrar mensaje de error
                 setErrorMessage('¡Este nombre ya está en uso! Por favor elige otro.');
@@ -22,7 +23,7 @@ const ChooseNamePage: React.FC = () => {
             }
 
             // Si no existe, proceder a crear el juego
-            const response = await fetch('https://ouijpers-deploy-production.up.railway.app/juego', {
+            const response = await fetch(`${API_BASE_URL}/juego`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: name, // Enviar nombre en el body
