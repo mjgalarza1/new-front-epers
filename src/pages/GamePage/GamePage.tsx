@@ -37,6 +37,7 @@ const GamePage: React.FC = () => {
         if (isLoading) return; // No hacer nada si aún está cargando
 
         if (attemptsLeft === 0 || !word.includes('_')) {
+            setIsLoading(true); // Habilita el spinner antes de avanzar la ronda
             setTimeout(() => {
                 avanzarRonda();
             }, 2000);
@@ -137,10 +138,12 @@ const GamePage: React.FC = () => {
             });
             if (!response.ok) throw new Error('Error al avanzar la ronda');
             setCurrentRound(currentRound + 1);
-            fetchGameState(); // Actualiza el estado del juego
         } catch (error) {
             console.error('Error al avanzar la ronda:', error);
             setErrorMessage('Error al avanzar la ronda');
+        } finally {
+            setIsLoading(false); // Finaliza el spinner después de completar la acción
+            fetchGameState(); // Actualiza el estado del juego
         }
     };
 
@@ -174,7 +177,7 @@ const GamePage: React.FC = () => {
                         <PalabraAdivinando word={word}/>
                     </div>
                     <div className='escribe-una-letra'>
-                        {isSubmitting ? (
+                        {isSubmitting || isLoading ? (
                             <div className="d-flex justify-content-center align-items-center"
                                  style={{height: '100%', position:'relative', top:'0.5em'}}>
                                 <div className="spinner-border" role="status">
