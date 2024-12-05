@@ -6,6 +6,7 @@ import PalabraAdivinando from '../../components/PalabraAdivinando';
 import LetrasEquivocadas from '../../components/LetrasEquivocadas';
 import OuijPers from '../../components/OuijPers/OuijPers';
 import "./GamePage.css"
+import '../../assets/spinner.css';
 import ouijpersBox from '../../assets/images/ahorcado/ouijpers-bg.png';
 import {API_BASE_URL} from "../../util/util";
 
@@ -19,19 +20,56 @@ const GamePage: React.FC = () => {
     const [word, setWord] = useState<string>('');
     const [wrongLetters, setWrongLetters] = useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-    const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = useState<string>(''); // Estado para manejar el error
+    const [errorMessage, setErrorMessage] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(true); // Asegúrate que inicie en true
 
-    // Nuevos: Estados temporales
-    const [tempAttemptsLeft, setTempAttemptsLeft] = useState<number>(6);
-    const [tempWrongLetters, setTempWrongLetters] = useState<string[]>([]);
-    const [tempRound, setTempRound] = useState<number>(currentRound);
+    useEffect(() => {
+        fetchGameState(); // Llamar a la función para cargar el estado del juego
+    }, []);
+
+    useEffect(() => {
+        if (currentRound > 3) {
+            navigate(`/game-over`, { state: { nombreJugador } });
+        }
+    }, [currentRound]);
+
+    useEffect(() => {
+        if (isLoading) return; // No hacer nada si aún está cargando
+
+        if (attemptsLeft === 0 || !word.includes('_')) {
+            setTimeout(() => {
+                avanzarRonda();
+            }, 2000);
+        }
+    }, [attemptsLeft, word, isLoading]);
+
+    const [animateTitle, setAnimateTitle] = useState(false);
+
+    useEffect(() => {
+        // Activa la animación cada vez que cambia la ronda
+        setAnimateTitle(true);
+
+        // Desactiva la animación después de que termine
+        const timer = setTimeout(() => setAnimateTitle(false), 800); // Duración de la animación (800ms en este caso)
+        return () => clearTimeout(timer); // Limpieza del temporizador
+    }, [currentRound]);
+
 
     const fetchGameState = async () => {
         try {
-            await Promise.all([fetchAttemptsLeft(), fetchRound(), fetchWord(), fetchWrongLetters()]);
+            setIsLoading(true);  // Establecer en true al inicio de la carga de datos
+
+            // Obtener todos los datos simultáneamente
+            await Promise.all([
+                fetchAttemptsLeft(),
+                fetchRound(),
+                fetchWord(),
+                fetchWrongLetters(),
+            ]);
         } catch (error) {
             console.error('Error fetching game state:', error);
+        } finally {
+            setIsLoading(false); // Establecer en false cuando los datos estén listos
         }
     };
 
@@ -43,7 +81,7 @@ const GamePage: React.FC = () => {
             setAttemptsLeft(data);
         } catch (error) {
             console.error(error);
-            setErrorMessage('Error al obtener intentos restantes'); // Mostrar error
+            setErrorMessage('Error al obtener intentos restantes');
         }
     };
 
@@ -64,7 +102,7 @@ const GamePage: React.FC = () => {
             setCurrentRound(roundNumber);
         } catch (error) {
             console.error(error);
-            setErrorMessage('Error al obtener la ronda actual'); // Mostrar error
+            setErrorMessage('Error al obtener la ronda actual');
         }
     };
 
@@ -76,7 +114,7 @@ const GamePage: React.FC = () => {
             setWord(data);
         } catch (error) {
             console.error(error);
-            setErrorMessage('Error al obtener la palabra'); // Mostrar error
+            setErrorMessage('Error al obtener la palabra');
         }
     };
 
@@ -88,114 +126,81 @@ const GamePage: React.FC = () => {
             setWrongLetters(data.split(','));
         } catch (error) {
             console.error(error);
-            setErrorMessage('Error al obtener letras equivocadas'); // Mostrar error
+            setErrorMessage('Error al obtener letras equivocadas');
         }
     };
 
-    useEffect(() => {
-        fetchGameState();
-    }, []);
-
-    useEffect(() => {
-        if (currentRound > 3) {
-            navigate(`/game-over`, { state: { nombreJugador } });
+    const avanzarRonda = async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/juego/${idJuego}/avanzarRonda`, {
+                method: 'PUT',
+            });
+            if (!response.ok) throw new Error('Error al avanzar la ronda');
+            setCurrentRound(currentRound + 1);
+            fetchGameState(); // Actualiza el estado del juego
+        } catch (error) {
+            console.error('Error al avanzar la ronda:', error);
+            setErrorMessage('Error al avanzar la ronda');
         }
-    }, [currentRound]);
+    };
 
     const handleLetterSubmit = async (letter: string) => {
         try {
+            setErrorMessage(''); // Limpiar mensaje de error antes de intentar enviar
             setIsSubmitting(true);
             const response = await fetch(`${API_BASE_URL}/jugador/${nombreJugador}/adivinarLetra/${letter}`, {
                 method: 'PUT',
             });
             if (!response.ok) throw new Error('Error al enviar la letra');
-
-            const attemptsResponse = await fetch(`${API_BASE_URL}/juego/${idJuego}/cantidadDeIntentos`);
-            if (!attemptsResponse.ok) throw new Error('Error al obtener intentos restantes');
-            const attemptsLeftFromServer = await attemptsResponse.json();
-
-            const palabraActual = await fetch(`${API_BASE_URL}/juego/${idJuego}/palabraAdivinando`);
-            if (!palabraActual.ok) throw new Error('Error al obtener la palabra');
-            const palabraActualDelServer = await palabraActual.text();
-
-            if (attemptsLeft === 1 && attemptsLeftFromServer === 6 ) {
-                handleTransition();
-            } else {
-                await fetchGameState();
-            }
-
+            fetchGameState(); // Actualiza el estado del juego
         } catch (error) {
             console.error(error);
-            setErrorMessage('Error al procesar la letra <br />(no se pueden repetir letras)'); // Mostrar error
+            setErrorMessage('No se pueden repetir letras');
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    const handleTransition = async () => {
-        setIsTransitioning(true);
-
-        setTempAttemptsLeft(0);
-        setTempWrongLetters([...wrongLetters]);
-        setTempRound(currentRound); // Congelar la ronda
-
-        setTimeout(async () => {
-            try {
-                await fetchGameState();
-                setWrongLetters([]);
-                setAttemptsLeft(6);
-            } catch (error) {
-                console.error('Error durante la transición:', error);
-                setErrorMessage('Error durante la transición'); // Mostrar error
-            } finally {
-                setIsTransitioning(false);
-            }
-        }, 2000);
-    };
-
-    const displayAttemptsLeft = isTransitioning ? tempAttemptsLeft : attemptsLeft;
-    const displayWrongLetters = isTransitioning ? tempWrongLetters : wrongLetters;
-    const displayRound = isTransitioning ? tempRound : currentRound; // Nuevo: Mostrar la ronda congelada
-
     return (
         <div className='game-container'>
             <div className='elements-wrapper'>
-            <div className='ahorcado'>
-                <PersonajeAhorcado attemptsLeft={displayAttemptsLeft} />
-                <h1 className='ronda-title'>Ronda {displayRound}</h1>
-            </div>
-
-            {isTransitioning && (
-                <p style={{ fontSize: '7vw', fontWeight: 'bold', color: 'red' }}>
-                    ¡Perdiste la ronda!
-                </p>
-            )}
-
-            <div className='ouijpers-container'>
+                <div className='ahorcado'>
+                    <PersonajeAhorcado attemptsLeft={attemptsLeft}/>
+                    <h1 className={`ronda-title ${animateTitle ? 'fade-in' : ''}`}>Ronda {currentRound}</h1>
+                </div>
+                <div className='ouijpers-container'>
                 <img className='ouijpers-bg' src={ouijpersBox}/>
-                <div className='palabra-adivinando'>
-                    <PalabraAdivinando word={word}/>
-                </div>
-                {/* Mostrar el mensaje de error si existe */}
-                {errorMessage && (
-                    <p
-                        style={{color: 'red', fontWeight: 'bold', fontSize: '0.75rem', lineHeight: '1.2',}}
-                        dangerouslySetInnerHTML={{__html: errorMessage}}
-                    />
-                )}
-                <div className='escribe-una-letra'>
-                    <OuijPers
-                        onLetterSubmit={handleLetterSubmit}
-                        nombreJugador={nombreJugador}
-                        isSubmitting={isSubmitting || isTransitioning}
-                    />
-                </div>
+                    <div className='palabra-adivinando'>
+                        <PalabraAdivinando word={word}/>
+                    </div>
+                    <div className='escribe-una-letra'>
+                        {isSubmitting ? (
+                            <div className="d-flex justify-content-center align-items-center"
+                                 style={{height: '100%', position:'relative', top:'0.5em'}}>
+                                <div className="spinner-border" role="status">
+                                    <span className="visually-hidden"></span>
+                                </div>
+                            </div>
+                        ) : (
+                            <OuijPers
+                                onLetterSubmit={handleLetterSubmit}
+                                nombreJugador={nombreJugador}
+                                isSubmitting={isSubmitting}
+                            />
+                        )}
+                    </div>
+                    <div className='letra-equivocada'>
+                        <LetrasEquivocadas wrongLetters={wrongLetters}/>
+                    </div>
 
-                <div className='letra-equivocada'>
-                    <LetrasEquivocadas wrongLetters={displayWrongLetters}/>
-                </div>
+                    {/* ERROR: No se pueden repetir letras */}
+                    {errorMessage && (
+                        <p className='error-gray'>
+                            {errorMessage}
+                        </p>
+                    )}
 
-            </div>
+                </div>
             </div>
         </div>
     );

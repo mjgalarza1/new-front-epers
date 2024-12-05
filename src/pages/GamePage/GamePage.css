@@ -21,6 +21,15 @@
     font-style: normal;
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
 .ronda-title {
     position: absolute;
     margin: 0;
@@ -32,6 +41,11 @@
     font-family: "Orator Std", serif;
     font-size: 10vw;
     text-align: center;
+    opacity: 1; /* Estático por defecto */
+}
+
+.ronda-title.fade-in {
+    animation: fadeIn 0.8s ease-out; /* Aplica la animación */
 }
 
 .ouijpers-container {
@@ -50,7 +64,7 @@
     margin: 0;
     width: 100vw;
     min-width: 360px;
-    top: 2.5em;
+    top: 2.6em;
     left: 50vw;
     transform: translate(-50vw, 0);
     font-family: "Orator Std", serif;

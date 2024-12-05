@@ -6,7 +6,7 @@ import hangman03 from '../../assets/images/ahorcado/hangman03.png';
 import hangman02 from '../../assets/images/ahorcado/hangman02.png';
 import hangman01 from '../../assets/images/ahorcado/hangman01.png';
 import './PersonajeAhorcado.css';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const PersonajeAhorcado: React.FC<{ attemptsLeft: number }> = ({ attemptsLeft }) => {
     const images = [
@@ -19,13 +19,25 @@ const PersonajeAhorcado: React.FC<{ attemptsLeft: number }> = ({ attemptsLeft })
         hangman07, // 6 intentos restantes (vacío o inicial)
     ];
 
+    const [isAnimating, setIsAnimating] = useState(false);
+
     const currentImage = images[6 - attemptsLeft];
+
+    useEffect(() => {
+        // Activa la clase de animación al cambiar la imagen
+        setIsAnimating(true);
+
+        // Remueve la animación después de 300ms
+        const timer = setTimeout(() => setIsAnimating(false), 300);
+
+        return () => clearTimeout(timer);
+    }, [currentImage]);
 
     return (
         <img
             src={currentImage}
             alt={`Intentos restantes: ${attemptsLeft}`}
-            className='ahorcado-img'
+            className={`ahorcado-img ${isAnimating ? 'shrink-animation' : ''}`}
         />
     );
 };

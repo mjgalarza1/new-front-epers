@@ -49,6 +49,7 @@ const ChooseNamePage: React.FC = () => {
             <input
                 type="text"
                 value={name}
+                placeholder='Nombre'
                 onChange={(e) => {
                     setName(e.target.value);
                     setErrorMessage(''); // Limpiar mensaje de error cuando cambian el nombre
@@ -56,7 +57,7 @@ const ChooseNamePage: React.FC = () => {
                 maxLength={15}
                 style={{ padding: '10px', fontSize: '16px', margin: '20px 0' }}
             />
-            <button onClick={handleSubmit} style={{ padding: '10px 20px', fontSize: '16px' }}>
+            <button onClick={handleSubmit} className='button-generic' style={{ padding: '10px 20px', fontSize: '16px' }}>
                 Iniciar Juego
             </button>
 

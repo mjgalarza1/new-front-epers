@@ -3,23 +3,21 @@ import React, { useState } from 'react';
 
 const OuijPers: React.FC<{ onLetterSubmit: (letter: string) => void; nombreJugador: string; isSubmitting: boolean }> = ({ onLetterSubmit, isSubmitting }) => {
     const [letter, setLetter] = useState<string>('');
-    const [errorMessage, setErrorMessage] = useState<string>(''); // Estado para el mensaje de error
 
     const handleSubmit = () => {
         const letterToSubmit = letter.toLowerCase(); // Convertir la letra a minúscula
 
         if (!/^[a-zA-Z]$/.test(letterToSubmit)) {
-            setErrorMessage('Ingresa una letra válida (de la a-z).');
             return;
         }
 
         onLetterSubmit(letterToSubmit); // Enviar la letra al GamePage
         setLetter('');
-        setErrorMessage(''); // Limpiar el mensaje de error si la letra es válida
     };
 
     return (
         <div>
+
             <div className='input-container'>
                 <input
                     type="text"
@@ -38,13 +36,6 @@ const OuijPers: React.FC<{ onLetterSubmit: (letter: string) => void; nombreJugad
                 </button>
             </div>
 
-            <div className='error-message'>
-                {errorMessage && (
-                    <p style={{color: 'red', fontWeight: 'bold', fontSize: '16px'}}>
-                        {errorMessage}
-                    </p>
-                )}
-            </div>
         </div>
     );
 };
