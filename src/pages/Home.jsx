@@ -1,5 +1,5 @@
 import React from 'react';
-import fondoJuego from "../assets/images/intro-bg.png";
+import fondoJuego from "../assets/images/intro-bg3.png";
 import { useNavigate } from 'react-router-dom';
 import {Parallax, ParallaxProvider} from 'react-scroll-parallax';
 
@@ -17,47 +17,90 @@ export default function HomeScreen() {
                     <img
                         src={fondoJuego}
                         alt="Fondo para Juego"
-                        style={{width: '100%', height: 'auto', maxWidth:'900px'}}
+                        style={{ width: '100%', height: 'auto', maxWidth: '900px' }}
                     />
                 </Parallax>
 
                 <Parallax speed={10}>
-                    <div style={{backgroundColor:'black', paddingTop:'0.6em'}}>
-                        <h1 style={styles.title}>¡Bienvenido a OuijPers!</h1>
-                        <p style={styles.description}>
-                            En los rincones más oscuros de la existencia, existe un portal de comunicación entre los vivos y los
-                            espíritus, un vínculo que pocos se atreven a cruzar: OuijPers. Este juego sella la unión entre
-                            médiums y entidades etéreas - ángeles, demonios y espectros vagabundos atrapados en el más allá. El
-                            médium, arriesgando su propia esencia, intentará desentrañar las palabras ocultas por estos
-                            espíritus. Solo los más valientes pueden resistir la presión de su presencia… y ganar el
-                            conocimiento secreto que guardan.
+                <div style={{
+                    padding: '40px',
+                    textAlign: 'center',
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    borderRadius: '15px',
+                    boxShadow: '0px 0px 25px rgba(0, 0, 0, 0.8)',
+                    width: '90%',
+                    maxWidth: '1200px',
+                    color: '#ffffff',
+                    fontFamily: 'Georgia, serif',
+                    overflow: 'auto',
+                    zIndex: '1',
+                    maxHeight: 'calc(100vh - 80px)', // Asegura que el contenido no se recorte en pantallas pequeñas
+                    overflowY: 'scroll' // Permite desplazamiento vertical en el contenedor principal
+                }}>
+                    <h1 style={{
+                        fontSize: '3.5em',
+                        textShadow: '4px 4px 15px rgba(0, 0, 0, 0.8)',
+                        marginBottom: '20px',
+                        color: '#ffffff', // Título grande en blanco
+                    }}>
+                        ¡Bienvenido a OuijPers!
+                    </h1>
+                    <p style={{
+                        fontSize: '1.3em',
+                        lineHeight: '1.6',
+                        letterSpacing: '0.5px',
+                        marginBottom: '20px',
+                        textShadow: '2px 2px 5px rgba(0, 0, 0, 0.5)',
+                        fontWeight: '300'
+                    }}>
+                        Enfréntate a los espíritus en un macabro juego de ahorcado. El destino de tu alma y el brazo de RDJ están en juego.
+                        Supera 3 rondas llenas de misterios y peligros, acumula puntos y lucha por tu humanidad.
+                    </p>
+
+                    <h3 style={{
+                        fontSize: '2em',
+                        fontWeight: 'bold',
+                        margin: '30px 0',
+                        textDecoration: 'underline',
+                        textTransform: 'uppercase',
+                        color: '#ffffff', // Títulos grandes en blanco
+                    }}>
+                        Reglas del Juego
+                    </h3>
+
+                    <div style={{ textAlign: 'left', fontSize: '1.2em', margin: '20px 0' }}>
+                        <p><strong style={{ color: '#ff0000' }}>Objetivo:</strong><br />
+                            Salvar tu alma y recuperar el brazo de RDJ enfrentando a los espíritus en un macabro juego de ahorcado. Para ganar, debes superar las 3 rondas del desafío, acumulando puntos y evitando que los espíritus se apoderen de tu cuerpo.
                         </p>
 
-                        <h2 style={styles.subTitle}>El Desafío del Ahorcado Espiritual</h2>
-                        <p style={styles.description}>
-                            La partida enfrenta a dos seres con papeles definidos: un espíritu, cuya energía se oculta tras
-                            palabras arcanas, y un médium, que intenta acceder a su poder. Cada sesión se desarrolla en tres
-                            rondas, y cada una representa una conexión con un espíritu distinto, con una palabra que guarda sus
-                            secretos.
+                        <p><strong style={{ color: '#ff0000' }}>Mecánica del Juego:</strong><br />
+                            Cada jugador intenta adivinar una palabra, letra por letra. Si aciertas, ganas puntos. Si fallas, pierdes puntos. Si llegas a perder los 6 intentos, los espíritus tomarán parte de tu alma.
                         </p>
 
-                        <p style={styles.rule}>
-                            <span style={styles.bold}>1. El Rol del Espíritu</span><br/>
-                            En silencio, el espíritu elige una palabra que el médium debe adivinar, un conocimiento sagrado o un
-                            enigma oscuro. Si el médium se equivoca al intentar descubrirlo, el espíritu toma forma lentamente,
-                            invocando su figura espectral como advertencia. Primero, aparece la cabeza, luego el torso y las
-                            extremidades, cada error acercando al médium a la presencia total de la entidad. Un fracaso absoluto
-                            puede significar la liberación del espíritu al plano de los vivos.
+                        <p><strong style={{ color: '#ff0000' }}>Puntaje:</strong><br />
+                            +1 punto por cada letra acertada.<br />
+                            -1 punto por cada letra fallida.<br />
+                            +5 puntos por la última letra que completa la palabra.<br />
+                            -5 puntos si pierdes todos los intentos.
                         </p>
 
-                        <p style={styles.rule}>
-                            <span style={styles.bold}>2. El Rol del Médium</span><br/>
-                            El médium debe ser astuto y audaz, eligiendo letras en la OuijPers para desvelar la palabra oculta.
-                            Cada letra acertada abre una ventana al misterio, mientras que cada fallo da más poder al espíritu.
-                            Si adivina correctamente la palabra antes de completar la figura del espíritu, el conocimiento
-                            arcano pasa al médium y la entidad regresa al plano astral. Sin embargo, si la figura se completa,
-                            el espíritu podría liberarse, tomando parte de la esencia del médium antes de romper el vínculo.
+                        <p><strong style={{ color: '#ff0000' }}>Errores:</strong><br />
+                            Si fallas al adivinar la palabra completa quedándote sin intentos, los espíritus corrompen tu alma. Si fallas en todas las rondas, los espíritus se apoderan de tu cuerpo, y tu alma quedará atrapada en el mundo de los muertos.
                         </p>
+
+                        <p><strong style={{ color: '#ff0000' }}>Rondas:</strong><br />
+                            El juego consta de 3 rondas. Los espíritus se vuelven más agresivos y las palabras más difíciles a medida que avanzas.
+                        </p>
+
+                        <p><strong style={{ color: '#ff0000' }}>Condiciones de Victoria:</strong><br />
+                            <strong>Individual:</strong> Los jugadores deben completar todas las palabras de las rondas. Solo los tres mejores con mayor puntaje avanzan al enfrentamiento final.<br />
+                            <strong>Enfrentamiento Final:</strong> Los mejores jugadores unirán fuerzas para resolver la última palabra en un desafío especial. Si aciertan, ganan el brazo de RDJ. Si fallan, RDJ quedará incompleto y los espíritus prevalecerán.
+                        </p>
+
+                        <p><strong style={{ color: '#ff0000' }}>Nota Especial:</strong><br />
+                            Ten cuidado, los espíritus pueden intentar distraerte y manipularte. Mantén la concentración o perderás tu humanidad y el brazo de RDJ.
+                        </p>
+                    </div>
 
                         <div style={styles.buttonContainer}>
                             <button style={styles.button} onClick={() => navigate("/name-character")}>Iniciar una partida</button>
@@ -68,6 +111,7 @@ export default function HomeScreen() {
             </div>
         </ParallaxProvider>
     );
+
 }
 
 const styles = {
@@ -106,12 +150,13 @@ const styles = {
         fontWeight: 'bold',
     },
     button: {
-        backgroundColor: '#007bff',
+        backgroundColor: '#8B0000', // Rojo oscuro
         color: '#fff',
         padding: '10px 20px',
         border: 'none',
         fontSize: '16px',
         cursor: 'pointer',
+        transition: 'background-color 0.3s ease', // Transición suave al pasar el ratón
     },
     buttonContainer: {
         display: 'flex',
