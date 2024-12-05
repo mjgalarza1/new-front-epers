@@ -1,11 +1,13 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import PersonajeAhorcado from '../components/PersonajeAhorcado';
-import PalabraAdivinando from '../components/PalabraAdivinando';
-import LetrasEquivocadas from '../components/LetrasEquivocadas';
-import OuijPers from '../components/OuijPers';
-import {API_BASE_URL} from "../util/util";
+import PersonajeAhorcado from '../../components/PersonajeAhorcado/PersonajeAhorcado';
+import PalabraAdivinando from '../../components/PalabraAdivinando';
+import LetrasEquivocadas from '../../components/LetrasEquivocadas';
+import OuijPers from '../../components/OuijPers/OuijPers';
+import "./GamePage.css"
+import ouijpersBox from '../../assets/images/ahorcado/ouijpers-bg.png';
+import {API_BASE_URL} from "../../util/util";
 
 const GamePage: React.FC = () => {
     const { idJuego, nombre } = useParams();
@@ -156,28 +158,45 @@ const GamePage: React.FC = () => {
     const displayRound = isTransitioning ? tempRound : currentRound; // Nuevo: Mostrar la ronda congelada
 
     return (
-        <div style={{ padding: '5vw', textAlign: 'center' }}>
-            <h1 style={{ fontSize: '6vw' }}>Juego - Ronda {displayRound}</h1>
-            <PersonajeAhorcado attemptsLeft={displayAttemptsLeft} />
+        <div className='game-container'>
+            <div className='elements-wrapper'>
+            <div className='ahorcado'>
+                <PersonajeAhorcado attemptsLeft={displayAttemptsLeft} />
+                <h1 className='ronda-title'>Ronda {displayRound}</h1>
+            </div>
+
             {isTransitioning && (
                 <p style={{ fontSize: '7vw', fontWeight: 'bold', color: 'red' }}>
                     ¡Perdiste la ronda!
                 </p>
             )}
-            <PalabraAdivinando word={word} />
-            <LetrasEquivocadas wrongLetters={displayWrongLetters} />
-            {/* Mostrar el mensaje de error si existe */}
-            {errorMessage && (
-                <p
-                    style={{ color: 'red', fontWeight: 'bold', fontSize: '0.75rem', lineHeight: '1.2', }}
-                    dangerouslySetInnerHTML={{ __html: errorMessage }}
-                />
-            )}
-            <OuijPers
-                onLetterSubmit={handleLetterSubmit}
-                nombreJugador={nombreJugador}
-                isSubmitting={isSubmitting || isTransitioning}
-            />
+
+            <div className='ouijpers-container'>
+                <img className='ouijpers-bg' src={ouijpersBox}/>
+                <div className='palabra-adivinando'>
+                    <PalabraAdivinando word={word}/>
+                </div>
+                {/* Mostrar el mensaje de error si existe */}
+                {errorMessage && (
+                    <p
+                        style={{color: 'red', fontWeight: 'bold', fontSize: '0.75rem', lineHeight: '1.2',}}
+                        dangerouslySetInnerHTML={{__html: errorMessage}}
+                    />
+                )}
+                <div className='escribe-una-letra'>
+                    <OuijPers
+                        onLetterSubmit={handleLetterSubmit}
+                        nombreJugador={nombreJugador}
+                        isSubmitting={isSubmitting || isTransitioning}
+                    />
+                </div>
+
+                <div className='letra-equivocada'>
+                    <LetrasEquivocadas wrongLetters={displayWrongLetters}/>
+                </div>
+
+            </div>
+            </div>
         </div>
     );
 };

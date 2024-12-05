@@ -1,0 +1,86 @@
+.game-container {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    min-width: 360px;
+    background-image: url(../../assets/images/ahorcado/game-background.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.elements-wrapper {
+    display: flex;
+    min-width: 360px;
+}
+
+@font-face {
+    font-family: "Orator Std";
+    src: url('../../assets/fonts/OratorStd.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.ronda-title {
+    position: absolute;
+    margin: 0;
+    width: 100vw;
+    min-width: 360px;
+    top: 0.8em;
+    left: 48vw;
+    transform: translate(-50vw, 0);
+    font-family: "Orator Std", serif;
+    font-size: 10vw;
+    text-align: center;
+}
+
+.ouijpers-container {
+    position: fixed;
+    top: 50%;
+    min-width: 360px;
+}
+
+.ouijpers-bg {
+    width: 100vw;
+    min-width: 360px;
+}
+
+.palabra-adivinando {
+    position: absolute;
+    margin: 0;
+    width: 100vw;
+    min-width: 360px;
+    top: 2.5em;
+    left: 50vw;
+    transform: translate(-50vw, 0);
+    font-family: "Orator Std", serif;
+    font-size: 6.5vw;
+    color: black;
+    text-align: center;
+}
+
+.escribe-una-letra {
+    position: absolute;
+    margin: 0;
+    width: 100vw;
+    min-width: 360px;
+    bottom: 2.4em;
+    left: 50vw;
+    transform: translate(-50vw, 0);
+    font-family: "Orator Std", serif;
+    font-size: 6.5vw;
+
+}
+
+.letra-equivocada {
+    position: absolute;
+    margin: 0;
+    width: 100vw;
+    min-width: 360px;
+    bottom: 1.2em;
+    left: 50vw;
+    transform: translate(-50vw, 0);
+    font-family: "Orator Std", serif;
+    font-size: 6.5vw;
+    text-align: center;
+}
