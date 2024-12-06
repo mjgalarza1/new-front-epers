@@ -17,32 +17,19 @@ export default function HomeScreen() {
                     <img
                         src={fondoJuego}
                         alt="Fondo para Juego"
-                        style={{ width: '100%', height: 'auto', maxWidth: '900px' }}
+                        style={{ width: '100vw', height: 'auto', maxWidth: '700px' }}
                     />
                 </Parallax>
 
                 <Parallax speed={10}>
                 <div style={{
-                    padding: '40px',
-                    textAlign: 'center',
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    borderRadius: '15px',
-                    boxShadow: '0px 0px 25px rgba(0, 0, 0, 0.8)',
-                    width: '90%',
-                    maxWidth: '1200px',
+                    backgroundColor:'black',
+                    paddingTop:'0.6em',
                     color: '#ffffff',
                     fontFamily: 'Georgia, serif',
-                    overflow: 'auto',
-                    zIndex: '1',
-                    maxHeight: 'calc(100vh - 80px)', // Asegura que el contenido no se recorte en pantallas pequeñas
-                    overflowY: 'scroll' // Permite desplazamiento vertical en el contenedor principal
+                    padding: '0.5em 0.5em',
                 }}>
-                    <h1 style={{
-                        fontSize: '3.5em',
-                        textShadow: '4px 4px 15px rgba(0, 0, 0, 0.8)',
-                        marginBottom: '20px',
-                        color: '#ffffff', // Título grande en blanco
-                    }}>
+                    <h1 style={styles.homeTitle}>
                         ¡Bienvenido a OuijPers!
                     </h1>
                     <p style={{
@@ -68,7 +55,7 @@ export default function HomeScreen() {
                         Reglas del Juego
                     </h3>
 
-                    <div style={{ textAlign: 'left', fontSize: '1.2em', margin: '20px 0' }}>
+                    <div style={styles.description}>
                         <p><strong style={{ color: '#ff0000' }}>Objetivo:</strong><br />
                             Salvar tu alma y recuperar el brazo de RDJ enfrentando a los espíritus en un macabro juego de ahorcado. Para ganar, debes superar las 3 rondas del desafío, acumulando puntos y evitando que los espíritus se apoderen de tu cuerpo.
                         </p>
@@ -119,15 +106,18 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         textAlign: 'center',
-        padding: '20px',
+        padding: '0.5em 0',
+        margin: '0 0.5em',
         backgroundColor: '#000',
         color: 'white',
         width: '1280px',
     },
-    title: {
+    homeTitle: {
         fontSize: '32px',
         fontFamily: 'Courier New',
         marginBottom: '20px',
+        color: '#ffffff',
+        textShadow: '4px 4px 15px rgba(0, 0, 0, 0.8)',
     },
     description: {
         fontSize: '18px',
