@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { Observable } from 'rxjs';
-import { fromFetch } from 'rxjs/fetch';
-import { switchMap, retry, catchError } from 'rxjs/operators';
 import PersonajeAhorcado from '../../components/PersonajeAhorcado/PersonajeAhorcado';
 import PalabraAdivinando from '../../components/PalabraAdivinando';
 import LetrasEquivocadas from '../../components/LetrasEquivocadas';
@@ -11,6 +8,7 @@ import "../GamePage/GamePage.css";
 import '../../assets/spinner.css';
 import ouijpersBox from '../../assets/images/ahorcado/ouijpers-bg.png';
 import { API_BASE_URL } from "../../util/util";
+import {obtenerLetrasUsadas} from "../../scripts/letrasUsadasService";
 
 const RondaUltimate: React.FC = () => {
     const { idJuego } = useParams<{ idJuego: string }>();
@@ -43,12 +41,12 @@ const RondaUltimate: React.FC = () => {
 
     useEffect(() => {
         if (idPalabra) {
-            const subscription = subscribeToWordUpdates(idPalabra).subscribe({
-                next: (updatedWord) => {
-                    setWord(updatedWord); // Actualiza la palabra
-                    fetchGameState(); // Refresca el estado del juego
+            const subscription = obtenerLetrasUsadas(idPalabra).subscribe({
+                next: (updatedLetters: string[]) => {
+                    console.log('Letras usadas actualizadas:', updatedLetters);
+                    fetchGameState(); // Actualiza el resto del estado
                 },
-                error: (err) => console.error('Error en el flujo de palabra:', err),
+                error: (err) => console.error('Error en el flujo de letras usadas:', err),
             });
 
             return () => subscription.unsubscribe(); // Limpia la suscripción
@@ -56,7 +54,7 @@ const RondaUltimate: React.FC = () => {
     }, [idPalabra]);
 
     useEffect(() => {
-        if (!isLoading && (attemptsLeft === 0 || !word.includes('_'))) {
+        if (!isLoading && word && (attemptsLeft === 0 || !word.includes('_'))) {
             navigate('/resolucion-final', { state: { word } });
         }
     }, [attemptsLeft, word, isLoading, navigate]);
@@ -67,7 +65,8 @@ const RondaUltimate: React.FC = () => {
             const response = await fetch(`${API_BASE_URL}/jugador/${nombre}`);
             if (!response.ok) throw new Error('Error al obtener datos del jugador');
             const data = await response.json();
-            setIdPalabra(data.idPalabraRondaUltimate); // Configura el ID de la palabra
+            setIdPalabra(data.idPalabraAdivinando); // Configura el ID de la palabra
+            console.log("EL JUGADOR DE FETCH: ", data)
             fetchGameState(); // Carga el estado inicial del juego
         } catch (error) {
             console.error('Error al obtener datos del jugador:', error);
@@ -76,33 +75,18 @@ const RondaUltimate: React.FC = () => {
         }
     };
 
-    const subscribeToWordUpdates = (idPalabra: string): Observable<string> => {
-        const url = `${API_BASE_URL}/palabraRondaUltimate/${idPalabra}/palabraAdivinando`;
-
-        return fromFetch(url).pipe(
-            retry(3), // Reintenta hasta 3 veces si hay error
-            switchMap((response) => {
-                if (!response.ok) throw new Error('Error al obtener palabra actualizada');
-                return response.json(); // Lee el JSON del cuerpo
-            }),
-            switchMap((data: { palabraAdivinando: string }) => {
-                // Extrae solo la palabra
-                return new Observable<string>((observer) => {
-                    observer.next(data.palabraAdivinando);
-                    observer.complete();
-                });
-            }),
-            catchError((err) => {
-                console.error('Error en el stream:', err);
-                throw err;
-            })
-        );
-    };
-
     const fetchGameState = async () => {
         try {
             setIsLoading(true);
-            await Promise.all([fetchAttemptsLeft(), fetchRound(), fetchWrongLetters()]);
+            const [attempts, round, wrongLetters] = await Promise.all([
+                fetchAttemptsLeft(),
+                fetchRound(),
+                fetchWrongLetters(),
+            ]);
+            await fetchWord();
+            setAttemptsLeft(attempts);
+            setCurrentRound(round);
+            setWrongLetters(wrongLetters.split(','));
             await checkPlayerTurn();
         } catch (error) {
             console.error('Error fetching game state:', error);
@@ -111,19 +95,20 @@ const RondaUltimate: React.FC = () => {
         }
     };
 
-    const fetchAttemptsLeft = async () => {
+
+    const fetchAttemptsLeft = async (): Promise<number> => {
         try {
             const response = await fetch(`${API_BASE_URL}/juego/${idJuego}/cantidadDeIntentos`);
             if (!response.ok) throw new Error('Error al obtener intentos restantes');
-            const data = await response.json();
-            setAttemptsLeft(data);
+            return await response.json();
         } catch (error) {
             console.error(error);
             setErrorMessage('Error al obtener intentos restantes');
+            return attemptsLeft; // Retorna el valor actual si hay error
         }
     };
 
-    const fetchRound = async () => {
+    const fetchRound = async (): Promise<number> => {
         try {
             const response = await fetch(`${API_BASE_URL}/juego/${idJuego}/rondaActual`);
             if (!response.ok) throw new Error('Error al obtener la ronda actual');
@@ -135,22 +120,35 @@ const RondaUltimate: React.FC = () => {
                 RondaFinalizada: 4,
                 RondaUltimate: 5,
             };
-            setCurrentRound(roundMap[data] ?? 0);
+            return roundMap[data] ?? currentRound; // Retorna el valor actual si no se encuentra
         } catch (error) {
             console.error(error);
             setErrorMessage('Error al obtener la ronda actual');
+            return currentRound; // Retorna el valor actual si hay error
         }
     };
 
-    const fetchWrongLetters = async () => {
+    const fetchWrongLetters = async (): Promise<string> => {
         try {
             const response = await fetch(`${API_BASE_URL}/juego/${idJuego}/letrasEquivocadas`);
             if (!response.ok) throw new Error('Error al obtener letras equivocadas');
-            const data = await response.text();
-            setWrongLetters(data.split(','));
+            return await response.text();
         } catch (error) {
             console.error(error);
             setErrorMessage('Error al obtener letras equivocadas');
+            return wrongLetters.join(','); // Retorna las letras actuales si hay error
+        }
+    };
+
+    const fetchWord = async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/juego/${idJuego}/palabraAdivinando`);
+            if (!response.ok) throw new Error('Error al obtener la palabra');
+            const data = await response.text();
+            setWord(data);
+        } catch (error) {
+            console.error(error);
+            setErrorMessage('Error al obtener la palabra');
         }
     };
 

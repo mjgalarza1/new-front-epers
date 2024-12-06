@@ -41,7 +41,7 @@ const GameOverPage: React.FC = () => {
             )}
 
             {/* Botón único para verificar si el jugador puede acceder a la Ronda Final */}
-            <button onClick={handleVerificarRondaUltimate} style={{ marginTop: '20px' }}>
+            <button className='button-generic' onClick={handleVerificarRondaUltimate} style={{ marginTop: '20px' }}>
                 Acceder a la Ronda Final
             </button>
         </div>

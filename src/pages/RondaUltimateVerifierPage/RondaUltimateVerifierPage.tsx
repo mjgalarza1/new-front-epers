@@ -64,18 +64,18 @@ const RondaUltimateVerifierPage: React.FC = () => {
     return (
         <div style={{ textAlign: 'center', padding: '20px' }}>
             {esDigno === null ? (
-                <p>Verificando dignidad...</p>
+                <p>Verificando...</p>
             ) : esDigno ? (
                 <div>
                     <h1>Eres digno de participar en la Ronda Final</h1>
-                    <button onClick={handleIrARondaUltimate} style={{ marginTop: '20px' }}>
+                    <button className='button-generic' onClick={handleIrARondaUltimate} style={{ marginTop: '20px' }}>
                         Ir a la Ronda Final
                     </button>
                 </div>
             ) : (
                 <div>
                     <h1>NO ERES DIGNO</h1>
-                    <button onClick={handleVolverGameOver} style={{ marginTop: '20px' }}>
+                    <button className='button-generic' onClick={handleVolverGameOver} style={{ marginTop: '20px' }}>
                         Volver
                     </button>
                 </div>

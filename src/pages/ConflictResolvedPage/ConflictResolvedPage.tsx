@@ -13,7 +13,7 @@ const ConflictResolvedPage: React.FC = () => {
 
     const message = word.includes('_')
         ? 'SUS CUERPOS FUERON POSEÍDOS POR LOS ESPÍRITUS'
-        : 'Han recuperado el brazo de RDJ';
+        : '¡El brazo de RDJ ha sido recuperado!';
 
     return (
         <div className="conflict-resolved-container">
