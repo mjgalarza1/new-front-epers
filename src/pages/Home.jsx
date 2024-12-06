@@ -91,7 +91,6 @@ export default function HomeScreen() {
 
                         <div style={styles.buttonContainer}>
                             <button style={styles.button} onClick={() => navigate("/name-character")}>Iniciar una partida</button>
-                            <button style={styles.button} onClick={() => navigate("/ranking")}>Ver Ranking</button>
                         </div>
                     </div>
                 </Parallax>
